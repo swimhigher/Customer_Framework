@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DataBase\DataBase.csproj" />
+    <ProjectReference Include="..\GR.Core\GR.Core.csproj" />
+    <ProjectReference Include="..\GR.IServices\GR.IServices.csproj" />
+  </ItemGroup>
+
+</Project>
