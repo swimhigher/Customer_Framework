@@ -1,0 +1,102 @@
+﻿@using GR.Entity
+@{
+    ViewBag.Title = "角色设置";
+
+    string userId = ViewBag.UserId;
+    List<SysRole> roleList = ViewBag.RoleList;
+    List<SysRoleUser> userRoleList = ViewBag.UserRoleList;
+}
+@section styles{
+    <style>
+        li {
+            float: left;
+            min-width: 100px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-radius: 5px;
+            margin-left: 10px;
+            border: 1px solid #eee;
+            margin-bottom: 5px;
+            background-color: rgba(238,238,238,0.98);
+            cursor: pointer;
+            position: relative;
+        }
+
+            li i {
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                width: 15px;
+                height: 25px;
+                font-size: 16px;
+                display: none;
+            }
+
+        .active {
+            background-color: #dab097;
+            color: #fff;
+        }
+    </style>
+}
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('li').on('click', function () {
+                $(this).find('i').toggle();
+                if ($(this).hasClass('active')) {
+                    $(this).removeClass('active');
+                } else {
+                    $(this).addClass('active');
+                }
+            });
+
+            var getIds = function () {
+                var ids = [];
+                $('li[data-id].active').each(function (index, item) {
+                    ids.push($(item).data('id'));
+                });
+                return ids;
+            };
+
+            window.submit = function (callback) {
+                var ids = getIds();
+                var handle = function () {
+                    banana.helper.ajax({
+                        url: '/sysuser/SaveUserRole'
+                        , data: {
+                            id: '@userId'
+                            , roleIds: ids
+                        }
+                        , success: function (res) {
+                            banana.helper.invokeFunction(callback, res);
+                        }
+                    });
+                };
+                if (ids.length == 0) {
+                    banana.controls.confirm('当前未选择任何角色，确定提交吗？', function () {
+                        handle();
+                    });
+                } else {
+                    handle();
+                }
+            };
+        });
+    </script>
+}
+
+<ul>
+    @foreach (var item in roleList)
+    {
+        if (userRoleList.Count(x => x.RoleId == item.Id) > 0)
+        {
+            <li data-id="@item.Id" class="active">@item.Name<i class="Hui-iconfont Hui-iconfont-selected" style="display:inline;"></i></li>
+        }
+        else
+        {
+            <li data-id="@item.Id">@item.Name<i class="Hui-iconfont Hui-iconfont-selected"></i></li>
+        }
+    }
+</ul>

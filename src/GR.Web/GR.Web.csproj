@@ -2,13 +2,165 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Helper\CookieHelper.cs" />
+    <Compile Remove="Helper\HttpContextEx.cs" />
+    <Compile Remove="Helper\SessionContext.cs" />
+    <Compile Remove="Helper\SessionUser.cs" />
+    <Compile Remove="Helper\StaticHttpContextExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\fonts\font\iconfont.js" />
+    <None Include="wwwroot\fonts\font\iconfont.svg" />
+    <None Include="wwwroot\fonts\glyphicons-halflings-regular.svg" />
+    <None Include="wwwroot\fonts\iconfont.js" />
+    <None Include="wwwroot\fonts\iconfont.svg" />
+    <None Include="wwwroot\icons\iconfont.js" />
+    <None Include="wwwroot\icons\iconfont.svg" />
+    <None Include="wwwroot\icons\iconfont.woff2" />
+    <None Include="wwwroot\js\admin.js" />
+    <None Include="wwwroot\js\base\banana.js" />
+    <None Include="wwwroot\js\base\banana.thread.js" />
+    <None Include="wwwroot\js\base\bootstrap.min.js" />
+    <None Include="wwwroot\js\base\common.js" />
+    <None Include="wwwroot\js\base\home.js" />
+    <None Include="wwwroot\js\base\html2canvas.min.js" />
+    <None Include="wwwroot\js\base\html5.min.js" />
+    <None Include="wwwroot\js\base\jquery-1.11.3.min.js" />
+    <None Include="wwwroot\js\base\jquery-ui.custom.min.js" />
+    <None Include="wwwroot\js\base\jquery-ui.min.js" />
+    <None Include="wwwroot\js\base\jquery.1.9.0.js" />
+    <None Include="wwwroot\js\base\jquery.2.0.0.js" />
+    <None Include="wwwroot\js\base\jquery.form.min.js" />
+    <None Include="wwwroot\js\base\jquery.min.map" />
+    <None Include="wwwroot\js\base\jquery.table.js" />
+    <None Include="wwwroot\js\base\respond.min.js" />
+    <None Include="wwwroot\js\base\vue.min.js" />
+    <None Include="wwwroot\js\base\webvedio.helper.js" />
+    <None Include="wwwroot\js\base\webvideo.ctrl.js" />
+    <None Include="wwwroot\js\base\zepto.min.js" />
+    <None Include="wwwroot\js\jcpfree.js" />
+    <None Include="wwwroot\js\jquery.1.9.0.js" />
+    <None Include="wwwroot\js\LodopFuncs.js" />
+    <None Include="wwwroot\js\RfidOperation.js" />
+    <None Include="wwwroot\js\RfidOperation_s.js" />
+    <None Include="wwwroot\js\site.js" />
+    <None Include="wwwroot\js\site.min.js" />
+    <None Include="wwwroot\js\vue.min.js" />
+    <None Include="wwwroot\layuiadmin\config.js" />
+    <None Include="wwwroot\layuiadmin\layui\font\iconfont.svg" />
+    <None Include="wwwroot\layuiadmin\layui\layui.all.js" />
+    <None Include="wwwroot\layuiadmin\layui\layui.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\carousel.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\code.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\colorpicker.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\element.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\flow.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\form.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\jquery.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\laydate.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\layedit.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\layer.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\laypage.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\laytpl.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\mobile.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\rate.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\slider.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\table.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\tree.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\upload.js" />
+    <None Include="wwwroot\layuiadmin\layui\lay\modules\util.js" />
+    <None Include="wwwroot\layuiadmin\lib\admin.js" />
+    <None Include="wwwroot\layuiadmin\lib\config.js" />
+    <None Include="wwwroot\layuiadmin\lib\index.js" />
+    <None Include="wwwroot\layuiadmin\lib\view.js" />
+    <None Include="wwwroot\layuiadmin\modules\common.js" />
+    <None Include="wwwroot\layuiadmin\modules\tableSelect.js" />
+    <None Include="wwwroot\layuiadmin\modules\treeSelect.js" />
+    <None Include="wwwroot\layuiadmin\view.js" />
+    <None Include="wwwroot\layui\extend\dltable.js" />
+    <None Include="wwwroot\layui\extend\multiSelect.js" />
+    <None Include="wwwroot\layui\extend\selectM.js" />
+    <None Include="wwwroot\layui\extend\selectN.js" />
+    <None Include="wwwroot\layui\extend\tableSelect.js" />
+    <None Include="wwwroot\layui\extend\treeGrid.js" />
+    <None Include="wwwroot\layui\extend\treeTable.js" />
+    <None Include="wwwroot\layui\font\iconfont.svg" />
+    <None Include="wwwroot\layui\font\iconfont.woff2" />
+    <None Include="wwwroot\layui\layui.all.js" />
+    <None Include="wwwroot\layui\layui.js" />
+    <None Include="wwwroot\layui\lay\all-mobile.js" />
+    <None Include="wwwroot\layui\lay\all.js" />
+    <None Include="wwwroot\layui\lay\modules\carousel.js" />
+    <None Include="wwwroot\layui\lay\modules\code.js" />
+    <None Include="wwwroot\layui\lay\modules\colorpicker.js" />
+    <None Include="wwwroot\layui\lay\modules\element.js" />
+    <None Include="wwwroot\layui\lay\modules\flow.js" />
+    <None Include="wwwroot\layui\lay\modules\form.js" />
+    <None Include="wwwroot\layui\lay\modules\form_backup.js" />
+    <None Include="wwwroot\layui\lay\modules\jquery.js" />
+    <None Include="wwwroot\layui\lay\modules\laydate.js" />
+    <None Include="wwwroot\layui\lay\modules\layedit.js" />
+    <None Include="wwwroot\layui\lay\modules\layer.js" />
+    <None Include="wwwroot\layui\lay\modules\laypage.js" />
+    <None Include="wwwroot\layui\lay\modules\laytpl.js" />
+    <None Include="wwwroot\layui\lay\modules\mobile.js" />
+    <None Include="wwwroot\layui\lay\modules\mobile\layer-mobile.js" />
+    <None Include="wwwroot\layui\lay\modules\mobile\layim-mobile-open.js" />
+    <None Include="wwwroot\layui\lay\modules\mobile\upload-mobile.js" />
+    <None Include="wwwroot\layui\lay\modules\mobile\zepto.js" />
+    <None Include="wwwroot\layui\lay\modules\rate.js" />
+    <None Include="wwwroot\layui\lay\modules\slider.js" />
+    <None Include="wwwroot\layui\lay\modules\table.js" />
+    <None Include="wwwroot\layui\lay\modules\transfer.js" />
+    <None Include="wwwroot\layui\lay\modules\tree.js" />
+    <None Include="wwwroot\layui\lay\modules\treeGrid.js" />
+    <None Include="wwwroot\layui\lay\modules\upload.js" />
+    <None Include="wwwroot\layui\lay\modules\util.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\LICENSE" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\LICENSE.md" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
+    <None Include="wwwroot\lib\select\js\select2.full.js" />
+    <None Include="wwwroot\lib\select\js\select2.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DataBase\DataBase.csproj" />
     <ProjectReference Include="..\GR.Core\GR.Core.csproj" />
     <ProjectReference Include="..\GR.Services\GR.Services.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="http://json.schemastore.org/lsdlschema" /></VisualStudio></ProjectExtensions>
 
 
 

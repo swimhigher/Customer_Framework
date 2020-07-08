@@ -1,33 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Text.Json;
 
 namespace GR.Core
 {
     public static class ConfigHelper
     {
-        static JsonElement root;
+        private static JsonElement root;
+
         static ConfigHelper()
         {
             BuildRoot();
-
-
         }
 
-        static void BuildRoot()
+        private static void BuildRoot()
         {
             using (var stream = File.OpenRead("appsettings.json"))
             {
-
-                var doc = JsonDocument.Parse(stream);
+                var doc = JsonDocument.Parse(stream, new JsonDocumentOptions { CommentHandling = JsonCommentHandling.Skip });
                 root = doc.RootElement;
             }
         }
+
         //public static T Get<T>(string str)
         //{
-
         //    string[] arr = str.Split(':');
         //    if (!str.Contains(":"))
         //    {
@@ -54,7 +50,6 @@ namespace GR.Core
         //}
         public static string GetString(string str)
         {
-
             string[] arr = str.Split(':');
             if (!str.Contains(":"))
             {
@@ -79,10 +74,12 @@ namespace GR.Core
                 return GetDeep(next, newElement);
             }
         }
+
         public static int GetInt(string str)
         {
             return Convert.ToInt32(GetString(str));
         }
+
         public static bool GetBool(string str)
         {
             return Convert.ToBoolean(GetString(str));

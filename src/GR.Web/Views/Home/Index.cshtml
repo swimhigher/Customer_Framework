@@ -1,8 +1,500 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using GR.Entity;
+@using Microsoft.AspNetCore.Html;
+@using System.Text;
+@{
+    ViewBag.Title = "后台管理系统";
+    List<SysMenu> menus = ViewBag.MenuList;
+
+    Layout = null;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@functions{
+    HtmlString BuidlMenu(List<SysMenu> menus)
+    {
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        if (menus == null) return new HtmlString(sb.ToString());
+        foreach (var item in menus)
+        {
+            bool hasChildren = item.Children != null && item.Children.Count > 0;
+
+            sb.AppendLine($" <li data-name=\"{item.Id}\" class=\"layui-nav-item {(i == 0 ? "layui-nav-itemed" : "")} \">");
+
+            if (hasChildren)
+            {
+                sb.AppendLine($"<a href=\"javascript:;\"  lay-tips=\"{item.Name}\" lay-direction=\"2\">");
+            }
+            else
+            {
+                if (item.MenuType == 1)
+                {
+                    if (item.OpenType == 0)
+                    {
+                        sb.AppendLine($"<a lay-href=\"{item.Url}\"  lay-tips=\"{item.Name}\" lay-direction=\"2\">");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"<a href=\"{(item.Url == "default" ? "javascript:;" : item.Url)}\" target=\"_blank\" lay-tips=\"{item.Name}\" lay-direction=\"2\">");
+                    }
+                }
+                else
+                {
+                    sb.AppendLine($"<a href=\"javascript:;\"  lay-tips=\"{item.Name}\" lay-direction=\"2\">");
+                }
+            }
+
+            if (!string.IsNullOrEmpty(item.Icon))
+            {
+                if (item.Icon.Split(" ").Length > 1)
+                {
+                    sb.AppendLine($" <i class=\"{item.Icon}\"></i>");
+                }
+                else
+                {
+                    sb.AppendLine($" <i class=\"iconfont {item.Icon}\"></i>");
+                }
+
+            }
+            sb.AppendLine($" <cite>{item.Name}</cite>");
+            sb.AppendLine("</a>");
+
+            sb.AppendLine(MenuLoop(item.Children, 0));
+
+            sb.AppendLine("</li>");
+            i++;
+        }
+        var html = sb.ToString();
+        if (string.IsNullOrEmpty(html))
+        {
+            html = "<li></li>";
+        }
+        return new HtmlString(sb.ToString());
+    }
+    string MenuLoop(List<SysMenu> menus, int level)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        if (menus != null && menus.Count > 0)
+        {
+            sb.AppendLine($" <dl class=\"layui-nav-child\" style=\"padding-left:{(level + 1) * 10}px;\">");
+            foreach (var item in menus)
+            {
+                bool hasChildren = item.Children != null && item.Children.Count > 0;
+
+                sb.AppendLine($" <dd data-name=\"{item.Id}\">");
+
+                if (hasChildren)
+                {
+                    sb.AppendLine($"<a href=\"javascript:;\">");
+
+                    if (!string.IsNullOrWhiteSpace(item.Icon))
+                    {
+                        if (item.Icon.Split(" ").Length > 1)
+                        {
+                            sb.AppendLine($" <i class=\"{item.Icon}\"></i>");
+                        }
+                        else
+                        {
+                            sb.AppendLine($" <i class=\"iconfont {item.Icon}\"></i>");
+                        }
+                    }
+                    sb.AppendLine($" <cite>{item.Name}</cite>");
+                    sb.AppendLine("</a>");
+
+                    sb.AppendLine(MenuLoop(item.Children, level + 1));
+                }
+                else
+                {
+                    if (item.MenuType == 1)
+                    {
+                        if (item.OpenType == 0)
+                        {
+                            sb.AppendLine($"<a lay-href=\"{(hasChildren ? "javascript:;" : (item.Url == "default" ? "javascript:;" : item.Url))}\">");
+                        }
+                        else
+                        {
+                            sb.AppendLine($"<a href=\"{(hasChildren ? "javascript:;" : (item.Url == "default" ? "javascript:;" : item.Url))}\"  target=\"_blank\" >");
+                        }
+                    }
+                    else
+                    {
+                        sb.AppendLine($"<a href=\"javascript:;\">");
+                    }
+
+                    if (!string.IsNullOrEmpty(item.Icon))
+                    {
+                        if (item.Icon.Split(" ").Length > 1)
+                        {
+                            sb.AppendLine($" <i class=\"{item.Icon}\"></i>");
+                        }
+                        else
+                        {
+                            sb.AppendLine($" <i class=\"iconfont {item.Icon}\"></i>");
+                        }
+                    }
+                    sb.AppendLine($" <cite>{item.Name}</cite>");
+                    sb.AppendLine("</a>");
+                }
+                sb.AppendLine(" </dd>");
+            }
+            sb.AppendLine("</dl>");
+        }
+        return sb.ToString();
+    }
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>@ViewBag.Title</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="../layuiadmin/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../layuiadmin/style/admin.css" media="all">
+
+    <link rel="stylesheet" href="~/icons/iconfont.css">
+    <script src="~/icons/iconfont.js"></script>
+
+    <style>
+        .iconfont {
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            margin-top: -19px;
+        }
+
+        .layui-side-menu .layui-nav .layui-nav-item a:hover {
+            background: #3450b9;
+        }
+
+        .layui-nav-tree .layui-nav-bar {
+            width: 5px;
+            height: 0;
+            background-color: #1E9FFF;
+        }
+    </style>
+    @*信息提示样式*@
+    <style>
+        .msgTipUL {
+            margin: 10px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .msgTipULLi {
+            position: relative;
+        }
+
+        .msgTipULLiD {
+            margin-bottom: 5px;
+            padding: 5px 0px 5px 3px;
+            border: 1px solid #ddd;
+        }
+
+            .msgTipULLiD img {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                width: 50px;
+                height: 70px;
+            }
+
+        .msgTipULLiDiv {
+            display: inline-block;
+        }
+
+            .msgTipULLiDiv label {
+                display: inline-block;
+                width: 80px;
+                font-weight: 600;
+            }
+
+            .msgTipULLiDiv span {
+                font-weight: 600;
+                width: 160px;
+                display: inline-block;
+                line-height: 24px;
+                height: auto;
+                word-break: break-all;
+                word-wrap: break-word;
+            }
+
+        .layui-bg-yellow {
+            background-color: yellow !important;
+        }
+
+        .layadmin-tabsbody-item, [template] {
+            display: block !important;
+            visibility: hidden !important;
+        }
+
+        .layui-show {
+            visibility: inherit !important;
+        }
+    </style>
+    <!--[if lte IE 9]>
+        <style>
+          .iconfont:before { content: ""; }
+      </style>
+    <![endif]-->
+    <script type="text/javascript">
+        function addTabs(opt) {
+            var e = layui.setter,
+                i = layui.element,
+                n = layui.admin,
+                t = n.tabsPage,
+                d = layui.view,
+
+                s = "#LAY_app_body",
+                o = "layadmin-layout-tabs",
+                r = layui.$;
+            r(window);
+            var l, b = r("#LAY_app_tabsheader>li"),
+                y = opt.url.replace(/(^http(s*):)|(\?[\s\S]*$)/g, "");
+            if (b.each(function (e) {
+                var i = r(this),
+                    n = i.attr("lay-id");
+                n === opt.url && (l = !0, t.index = e)
+            }), d = d || "〉", e.pageTabs) l || (r(s).append(['<div class="layadmin-tabsbody-item layui-show">', '<iframe src="' + opt.url + '" frameborder="0" class="layadmin-iframe"></iframe>', "</div>"].join("")),
+                t.index = b.length,
+                i.tabAdd(o, { title: "<span>" + opt.title + "</span>", id: opt.url, attr: y }));
+            else {
+                var u = n.tabsBody(n.tabsPage.index).find(".layadmin-iframe");
+                u[0].contentWindow.location.href = opt.url·
+            }
+            i.tabChange(o, opt.url),
+                n.tabsBodyChange(t.index, { url: opt.url, text: opt.title });
+            n.screen() < 2 && n.sideFlexible(),
+                d().autoRender();
+        }
+    </script>
+
+    <script src="~/js/base/jquery-1.11.3.min.js"></script>
+
+    <script src="~/lib/layer/layer.js"></script>
+    <script src="~/js/base/banana.js"></script>
+
+    <script>
+        function test() {
+
+            //events
+            //flexible侧边栏收缩
+            //about 右边栏
+            var tab = layui.admin.events.shade();
+        }
+    </script>
+    <style>
+        html.fix-ie-font-face :before,
+        html.fix-ie-font-face :after {
+            content: none !important;
+        }
+    </style>
+    <script>
+        //重设伪类，使字体强制生效
+        !(function redrawFontFace() {
+            if ($.support.leadingWhitespace) return;
+            $(window).one("load", function () {
+                $('html').addClass('fix-ie-font-face');
+                setTimeout(function () {
+                    $('html').removeClass('fix-ie-font-face');
+                }, 10);
+            });
+        }());
+    </script>
+    <script src="~/lib/jquery-tmpl/jquery.tmpl.js"></script>
+    <script id="tempTemplate" type="text/x-jquery-tmpl">
+        <li class="msgTipULLi">
+            <div class="msgTipULLiD">
+                <div class="msgTipULLiDiv"><label for="">姓名：</label><span>${Name}</span></div>
+                <div class="msgTipULLiDiv"><label for="">会见类型：</label><span>${Type}</span></div>
+                <div class="msgTipULLiDiv"><label for="">会见区：</label><span>${MeerArea}</span></div>
+                <div class="msgTipULLiDiv"><label for="">进入时间：</label><span>${CreateOn}</span></div>
+                <div class="msgTipULLiDiv">
+                    <label for="">反馈颜色：</label>
+                    <span>
+                        {{if Result==1}}
+                        <span style="width:150px;height:24px;" class="layui-badge "></span>
+                        {{else Result==2}}
+                        <span style="width:150px;height:24px;" class="layui-badge layui-bg-orange"></span>
+                        {{else}}
+                        <span style="width:150px;height:24px;" class="layui-badge layui-bg-orange layui-bg-yellow"></span>
+                        {{/if}}
+                    </span>
+                </div>
+                <img src="${Photo}" />
+            </div>
+        </li>
+    </script>
+</head>
+<body class="layui-layout-body">
+
+    <div id="LAY_app">
+        <div class="layui-layout layui-layout-admin">
+            <div class="layui-header">
+
+                <!-- 头部区域 -->
+                <ul class="layui-nav layui-layout-left">
+
+                    @*<li>
+                            <input type="button" value="登陆" onclick="login()" />
+                            <input type="button" value="登出" onclick="loginout()" />
+                            <input type="button" value="右下角" onclick="appendMsg()" />
+                        </li>*@
+                    <li class="layui-nav-item layadmin-flexible" lay-unselect>
+
+                        <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+                            <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+                        </a>
+                    </li>
+                    @*<li class="layui-nav-item layui-hide-xs" lay-unselect>
+                            <a href="http://www.layui.com/admin/" target="_blank" title="前台">
+                                <i class="layui-icon layui-icon-website"></i>
+                            </a>
+                        </li>*@
+                    <li class="layui-nav-item" lay-unselect>
+                        <a href="javascript:;" layadmin-event="refresh" title="刷新">
+                            <i class="layui-icon layui-icon-refresh-3"></i>
+                        </a>
+                    </li>
+                    @*<li class="layui-nav-item layui-hide-xs" lay-unselect>
+                            <input type="text" placeholder="搜索..." autocomplete="off" class="layui-input layui-input-search" layadmin-event="serach" lay-action="template/search.html?keywords=">
+                        </li>*@
+                </ul>
+                <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+
+                    @*<li class="layui-nav-item" lay-unselect>
+                            <a href="javascript:;">
+                                <i class="layui-icon layui-icon-util"></i>
+                                <span id="spanDataSyn" class="layui-badge-dot"></span>
+                            </a>
+                        </li>*@
+
+                    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                        <a href="javascript:;" layadmin-event="theme">
+                            <i class="layui-icon layui-icon-theme"></i>
+                        </a>
+                    </li>
+                    @*<li class="layui-nav-item layui-hide-xs" lay-unselect>
+                            <a href="javascript:;" layadmin-event="note">
+                                <i class="layui-icon layui-icon-note"></i>
+                            </a>
+                        </li>*@
+                    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                        <a href="javascript:;" layadmin-event="fullscreen">
+                            <i class="layui-icon layui-icon-screen-full"></i>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item" lay-unselect>
+                        <a href="javascript:;">
+                            <cite>@ViewBag.UserName</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            @*<dd><a lay-href="set/user/info.html">基本资料</a></dd>*@
+                            <dd><a lay-href="/SysUser/EditPassword">修改密码</a></dd>
+                            <hr>
+                            <dd style="text-align: center;"><a onclick="signout()" >退出</a></dd>
+                        </dl>
+                    </li>
+
+                    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                        <a href="javascript:;" layadmin-event="about"><i class="layui-icon layui-icon-more-vertical"></i></a>
+                    </li>
+                    @*<li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-unselect>
+                            <a href="javascript:;" layadmin-event="more"><i class="layui-icon layui-icon-more-vertical"></i></a>
+                        </li>*@
+                </ul>
+            </div>
+
+            <!-- 侧边菜单 -->
+            <div class="layui-side layui-side-menu">
+                <div class="layui-side-scroll">
+                    <div class="layui-logo">
+                        <span>会议后台管理系统</span>
+                    </div>
+
+                    <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+                        @BuidlMenu(menus);
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 页面标签 -->
+            <div class="layadmin-pagetabs" id="LAY_app_tabs">
+                <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+                <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+                <div class="layui-icon layadmin-tabs-control layui-icon-down">
+                    <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+                        <li class="layui-nav-item" lay-unselect>
+                            <a href="javascript:;"></a>
+                            <dl class="layui-nav-child layui-anim-fadein">
+                                <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
+                                <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
+                                <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </div>
+                <div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+                    <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                        <li lay-id="/html/home.html" lay-attr="/html/home.html" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 主体内容 -->
+            <div class="layui-body" id="LAY_app_body">
+                <div class="layadmin-tabsbody-item layui-show">
+                    <iframe src="/html/home.html" frameborder="0" class="layadmin-iframe"></iframe>
+                </div>
+            </div>
+
+            <!-- 辅助元素，一般用于移动设备下遮罩 -->
+            <div class="layadmin-body-shade" layadmin-event="shade"></div>
+        </div>
+    </div>
+    <div id="msgTip" style="display:none;">
+        <ul class="msgTipUL">
+            <li class="msgTipULLi">
+                <div class="msgTipULLiD">
+                    <div class="msgTipULLiDiv"><label for="">姓名：</label><span>测试啊</span></div>
+                    <div class="msgTipULLiDiv"><label for="">会见类型：</label><span>机构会见</span></div>
+                    <div class="msgTipULLiDiv"><label for="">会见区：</label><span>会见区1</span></div>
+                    <div class="msgTipULLiDiv"><label for="">进入时间：</label><span>2018-1-10 12:00:00</span></div>
+                    <div class="msgTipULLiDiv">
+                        <label for="">反馈颜色：</label>
+                        <span>
+                            <span style="width:150px;height:24px;" class="layui-badge layui-bg-orange"></span>
+                        </span>
+                    </div>
+                    @*<img src="/file/_eLeEVlxpr-x3yP5K4JqrYcodtzZsbKbqKkSihvUQ61ClgUAVQSWqlfTtUR_Qd9Y.jpg" />*@
+                </div>
+            </li>
+        </ul>
+    </div>
+    <script src="~/layuiadmin/layui/layui.js"></script>
+    <script>
+        layui.config({
+            base: '../layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use('index');
+        function signout() {
+            console.log('signout')
+            banana.helper.ajax({
+                url: '/home/LogOut'
+
+                , type: 'post'
+
+                , success: function (res) {
+                    console.log(res)
+                    if (res.Success) {
+                        window.location = "/login/index";
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

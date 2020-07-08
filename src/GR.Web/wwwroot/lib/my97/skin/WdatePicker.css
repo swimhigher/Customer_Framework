@@ -1,0 +1,14 @@
+.Wdate {
+    background-image: url(/assets/lib/my97/skin/datePicker.gif);
+    background-repeat: no-repeat;
+    background-position: right;
+}
+
+    .Wdate::-ms-clear {
+        display: none;
+    }
+
+.WdateFmtErr {
+    font-weight: bold;
+    color: red;
+}

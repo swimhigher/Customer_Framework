@@ -1,0 +1,76 @@
+﻿@model GR.Entity.SysRole
+@{
+    bool IsEdit = Model != null; //是否是编辑模式
+    ViewBag.Title = IsEdit ? "编辑" : "新建";
+    ViewBag.IsForm = true;
+}
+@section styles{
+    <style>
+        .layui-form-label {
+            width: 130px;
+        }
+
+        .layui-form-item {
+            margin-bottom: 5px;
+            clear: both;
+        }
+    </style>
+}
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            var $form = $('form');
+            $form.validate({
+                errorElement: 'div'
+                , errorClass: 'valid-block'
+                , focusInvalid: true
+                , rules: {
+                    'name': {
+                        required: true
+                        , minlength: 2
+                        , notspace:true
+                    }
+                }
+                , messages: { }
+                , success: function (e) { $(e).remove(); }
+                , errorPlacement: function (error, element) { error.insertAfter(element); }
+                , highlight: function (e) { $(e).closest('.valid-block').addClass('has-error'); }
+            });
+
+            window.submit = function (callback) {
+                if ($form.valid()) {
+                    $form.ajaxSubmit(function (res) {
+                        banana.helper.invokeFunction(callback, res);
+                    });
+                }
+            };
+        });
+    </script>
+}
+
+<form class="layui-form" action="/sysrole/save" method="post" style="margin-top:20px">
+    <input type="hidden" name="id" value="@(IsEdit?Model.Id:"")" />
+    <div class="layui-form-item">
+        <label class="layui-form-label required">角色名称</label>
+        <div class="layui-inline" style="width:212px">
+            <input type="text"
+                   name="name"
+                   autocomplete="off"
+                   placeholder="请输入角色名称"
+                   class="layui-input layui-form-danger"
+                   lay-verify="required"
+                   value="@(IsEdit?Model.Name:"")" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-inline" style="width:212px">
+            <input type="text"
+                   name="remark"
+                   placeholder="请输入"
+                   autocomplete="off"
+                   class="layui-input"
+                   value="@(IsEdit?Model.Remark:"")" />
+        </div>
+    </div>
+</form>

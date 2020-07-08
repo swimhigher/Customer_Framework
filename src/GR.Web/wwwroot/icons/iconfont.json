@@ -1,0 +1,233 @@
+{
+  "id": "1476863",
+  "name": "新闸机管理后台",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "11488835",
+      "name": "卡校验",
+      "font_class": "card",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "11488836",
+      "name": "我的申请",
+      "font_class": "my_application",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "11488837",
+      "name": "菜单管理",
+      "font_class": "menu",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "11488838",
+      "name": "设备管理",
+      "font_class": "device",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "11488839",
+      "name": "打印批次管理",
+      "font_class": "print",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "11488841",
+      "name": "人员列表",
+      "font_class": "team_list",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "11488842",
+      "name": "审核管理",
+      "font_class": "examine",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "11488843",
+      "name": "流程模板",
+      "font_class": "template",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "11488844",
+      "name": "我的审核",
+      "font_class": "my_examine",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "11488845",
+      "name": "会场管理",
+      "font_class": "venue",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "11488846",
+      "name": "人员管理",
+      "font_class": "team",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "11488847",
+      "name": "人员组管理",
+      "font_class": "team_group",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "11488848",
+      "name": "角色管理",
+      "font_class": "role",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "11488849",
+      "name": "人员报名",
+      "font_class": "staff",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "11488850",
+      "name": "系统管理",
+      "font_class": "setting",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "11488851",
+      "name": "用户管理",
+      "font_class": "user",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "11500435",
+      "name": "通行记录列表",
+      "font_class": "record_list",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "11500436",
+      "name": "通行记录管理",
+      "font_class": "record",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "11500537",
+      "name": "设备列表",
+      "font_class": "device_list",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "11500570",
+      "name": "会场列表",
+      "font_class": "venue_list",
+      "unicode": "e631",
+      "unicode_decimal": 58929
+    },
+    {
+      "icon_id": "12735149",
+      "name": "申请记录",
+      "font_class": "application_record",
+      "unicode": "e68e",
+      "unicode_decimal": 59022
+    },
+    {
+      "icon_id": "12735150",
+      "name": "签到记录",
+      "font_class": "attendance_record",
+      "unicode": "e68f",
+      "unicode_decimal": 59023
+    },
+    {
+      "icon_id": "12735151",
+      "name": "收款记录",
+      "font_class": "collection_records",
+      "unicode": "e690",
+      "unicode_decimal": 59024
+    },
+    {
+      "icon_id": "12735152",
+      "name": "会议信息",
+      "font_class": "conference_information",
+      "unicode": "e691",
+      "unicode_decimal": 59025
+    },
+    {
+      "icon_id": "12735153",
+      "name": "证件配置",
+      "font_class": "document_allocation",
+      "unicode": "e692",
+      "unicode_decimal": 59026
+    },
+    {
+      "icon_id": "12735154",
+      "name": "新闻发布",
+      "font_class": "news_release",
+      "unicode": "e693",
+      "unicode_decimal": 59027
+    },
+    {
+      "icon_id": "12735155",
+      "name": "快速链接",
+      "font_class": "quick_link",
+      "unicode": "e694",
+      "unicode_decimal": 59028
+    },
+    {
+      "icon_id": "12735156",
+      "name": "财务管理",
+      "font_class": "financial_management",
+      "unicode": "e695",
+      "unicode_decimal": 59029
+    },
+    {
+      "icon_id": "12735157",
+      "name": "系统设置",
+      "font_class": "system_setup",
+      "unicode": "e696",
+      "unicode_decimal": 59030
+    },
+    {
+      "icon_id": "12735158",
+      "name": "退款记录",
+      "font_class": "refund_record",
+      "unicode": "e697",
+      "unicode_decimal": 59031
+    },
+    {
+      "icon_id": "12735159",
+      "name": "网站设置",
+      "font_class": "website_setup",
+      "unicode": "e698",
+      "unicode_decimal": 59032
+    },
+    {
+      "icon_id": "12735160",
+      "name": "报名网站",
+      "font_class": "registration_website",
+      "unicode": "e699",
+      "unicode_decimal": 59033
+    }
+  ]
+}

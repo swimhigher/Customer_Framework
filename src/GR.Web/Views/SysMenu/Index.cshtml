@@ -1,0 +1,150 @@
+﻿@{
+    ViewBag.Title = "菜单列表";
+}
+
+@section styles{
+    <link href="~/layui/extend/treeGrid.css" rel="stylesheet" />
+}
+@section scripts{
+
+    <script>
+        var editObj = null, ptable = null, treeGrid = null, tableId = 'treeTable', layer = null;
+        layui.config({
+            base: '/layui/extend/'
+        }).extend({
+            treeGrid: 'treeGrid'
+        }).use(['jquery', 'treeGrid', 'layer'], function () {
+            var $ = layui.jquery;
+            var data = {
+                "msg": "",
+                "code": 0,
+                "data": [
+                    { "id": "1", "pId": "0", "name": "水果" },
+                    { "id": "101", "pId": "1", "name": "苹果" },
+                    { "id": "102", "pId": "1", "name": "香蕉" },
+                    { "id": "103", "pId": "1", "name": "梨" },
+                    { "id": "10101", "pId": "101", "name": "红富士苹果" },
+                    { "id": "10102", "pId": "101", "name": "红星苹果" },
+                    { "id": "10103", "pId": "101", "name": "嘎拉" },
+                    { "id": "10104", "pId": "101", "name": "桑萨" },
+                    { "id": "10201", "pId": "102", "name": "千层蕉" },
+                    { "id": "10202", "pId": "102", "name": "仙人蕉" },
+                    { "id": "10203", "pId": "102", "name": "吕宋蕉" }
+                ],
+                "count": 924,
+                "is": true,
+                "tip": "操作成功！"
+            };
+            treeGrid = layui.treeGrid;//很重要
+            layer = layui.layer;
+            ptable = treeGrid.render({
+                id: tableId
+                , elem: '#' + tableId
+                , idField: 'Id'
+                , url: '/sysmenu/GetMenuListNew'
+                , cellMinWidth: 100
+                , treeId: 'Id'//树形id字段名称
+                , treeUpId: 'ParentId'//树形父id字段名称
+                , treeShowName: 'Name'//以树形式显示的字段
+                , cols: [[
+                    {
+                        width: 150, title: '操作', align: 'center'/*toolbar: '#barDemo'*/
+                        , templet: function (d) {
+
+                            var html = '';
+                            var addBtn = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="add">添加</a>';
+                            var editBtn = '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">编辑</a>';
+
+                            var delBtn = '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
+                            if (d.ParentId == '0') {
+                                delBtn = '';
+                            }
+                            return addBtn + editBtn + delBtn;
+                        }
+                    }
+                    , { field: 'Name', width: 300, title: '菜单名称' }
+                    , { field: 'OrderBy', title: '排序' }
+                    , { field: 'Icon', title: '图标' }
+                    , { field: 'Url', title: '地址' }
+                    , {
+                        field: 'OpenType', title: '打开类型',
+                        templet: function (d) {
+                            return ["页面弹窗", "新窗口"][d.OpenType];
+                        }
+                    }
+                ]]
+                , page: false
+            });
+
+            treeGrid.on('tool(' + tableId + ')', function (obj) {
+                if (obj.event === 'del') {//删除行
+                    del(obj.data);
+                } else if (obj.event === "add") {//添加行
+                    add(obj.data);
+                }
+                else {
+                    edit(obj.data);
+                }
+            });
+        });
+
+        function del(obj) {
+            var ids = [obj.Id];
+            banana.controls.confirm('确认删除吗？', function () {
+                banana.helper.ajax({
+                    url: '/SysMenu/delete'
+                    , data: { ids: ids }
+                    , success: function (res) {
+                        if (res.Success) {
+                            banana.controls.msg('操作成功');
+                            location.reload();
+                        } else {
+                            banana.controls.alert(res.Message);
+                        }
+                    }
+                });
+            });
+        }
+        //添加
+        function add(obj) {
+            banana.controls.open({
+                title: '新建',
+                area: ['700px', '380px'],
+                content: '/SysMenu/create?pid=' + obj.Id
+                , btn: ['提交', '取消']
+                , yes: function (index, target) {
+                    banana.helper.invokeFunction($(arguments[1][0]).find('iframe')[0].contentWindow['submit'], function (res) {
+                        if (res.Success) {
+                            banana.controls.close(index);
+                            location.reload();
+                        } else {
+                            banana.controls.alert(res.Message);
+                        }
+                    });
+                }
+            });
+        }
+        function edit(obj) {
+            banana.controls.open({
+                title: '编辑'
+                , area: ['700px', '380px']
+                , content: '/SysMenu/create?id=' + obj.Id
+                , btn: ['提交', '取消']
+                , yes: function (index, target) {
+                    banana.helper.invokeFunction($(target).find('iframe')[0].contentWindow['submit'], function (res) {
+                        if (res.Success) {
+                            banana.controls.msg('操作成功');
+                            banana.controls.close(index);
+                            location.reload();
+                        } else {
+                            banana.controls.alert(res.Message);
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}
+<div>
+    <table class="layui-hidden" id="treeTable" lay-filter="treeTable"></table>
+</div>

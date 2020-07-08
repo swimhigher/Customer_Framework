@@ -1,0 +1,186 @@
+﻿@{
+    ViewBag.Title = "菜单";
+    string roleId = ViewBag.RoleId ?? "";
+}
+@section styles{
+    <link href="/lib/ztree/css/zTreeStyle.css" rel="stylesheet" />
+}
+@section scripts{
+    <script src="/lib/ztree/js/jquery.ztree.core.min.js"></script>
+    <script src="/lib/ztree/js/jquery.ztree.excheck.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var zTreeObj;
+            var roleId = $('#roleId').val();
+
+            function fetchAuth() {
+                var items;
+                banana.helper.ajax({
+                    url: '/sysrole/getauthlist'
+                    , async: false
+                    , type: 'post'
+                    , success: function (res) {
+                        items = res;
+                    }
+                });
+                return items.Data;
+            }
+
+            function buildTree(callback) {
+
+                banana.helper.ajax({
+                    url: '/sysrole/getmenulist'
+                    , success: function (res) {
+                        banana.helper.invokeFunction(callback, res.Data);
+                    }
+                });
+            }
+            buildTree(function (data) {
+
+                var setting = {
+                    check: {
+                        chkStyle: 'checkbox',
+                        enable: true,
+                        chkboxType: { "Y": "ps", "N": "s" }
+                        //chkboxType: { "Y": "ps", "N": "ps" }
+                    }
+                    , callback: {
+                        onDblClick: function (event, treeId, treeNode) {
+                            //alert(treeNode ? treeNode.tId + ", " + treeNode.name : "isRoot");
+
+                            if (treeNode == null) return;
+
+                            if (treeNode.code == null) {
+                                banana.controls.msg('非按钮级权限节点');
+                                return;
+                            }
+
+                            banana.controls.alert('代码：<span>' + treeNode.code + '</span><br />说明：' + treeNode.code_remark, {
+                                title: '按钮级权限'
+                            });
+
+                        }
+                    }
+                };
+                var nodes = [];
+
+                var auths = fetchAuth();
+
+                var buildNodes = function (data) {
+                    var nodes = [];
+                    if (banana.helper.getType(data) === 'array' && data.length > 0) {
+                        $(data).each(function (a, b) {
+                            var node = {
+                                id: b['Id']
+                                , name: b['Name']
+                                , children: []
+                                , isbutton: false
+                            };
+                            var childrenNodes = buildNodes(b['Children']);
+                            if (childrenNodes.length > 0) {
+                                node.children = childrenNodes;
+                            } else {
+                                //delete node.children;
+
+                                //处理按钮权限
+                                banana.helper.getLinq(function (linq) {
+                                    var items = linq.From(auths).Where('x=>x.MenuId=="' + node.id + '"').ToArray();
+                                    if (items.length > 0) {
+                                        $(items).each(function (i, item) {
+                                            node.children.push({
+                                                id: item.Id
+                                                , name: item.Name + '[' + item.Code + ']'
+                                                , code: item.Code
+                                                , code_remark: item.Remark
+                                                , isbutton: true
+                                            });
+                                        });
+                                    }
+                                });
+                                if (node.children.length == 0) {
+                                    delete node.children;
+                                }
+                            }
+                            nodes.push(node);
+                        });
+                    }
+                    return nodes;
+                };
+                nodes = buildNodes(data);
+                console.log(nodes);
+                zTreeObj = $.fn.zTree.init($("#tree_menu"), setting, nodes);
+                setItemChecked(zTreeObj);
+            });
+
+            var setItemChecked = function (tree) {
+                banana.helper.ajax({
+                    url: '/sysrole/GetRoleMenus'
+                    , data: { roleId: roleId }
+                    , success: function (res) {
+
+                        if (!res.Success) {
+                            return;
+                        }
+
+                        var menus = res.Data.menus;
+                        var auths = res.Data.auths;
+
+                        //这里设置checkbox选中状态
+                        for (var i = 0; i < menus.length; i++) {
+                            var id = menus[i].MenuId;
+
+                            var node = tree.getNodeByParam("id", id);
+                            if (node != null) {
+                                tree.checkNode(node, true, false, true);
+                            }
+                        }
+
+                        for (var i = 0; i < auths.length; i++) {
+                            var id = auths[i].ButtonId;
+                            var node = tree.getNodeByParam("id", id);
+                            if (node != null) {
+                                tree.checkNode(node, true, false, true);
+                            }
+                        }
+
+                        var nodes = tree.getNodes();
+                        for (var i = 0; i < nodes.length; i++) { //设置节点展开
+                            tree.expandNode(nodes[i], true, false, true);
+                        }
+                    }
+                });
+            }
+
+            window.submit = function (callback) {
+                //获取选中的按钮权限
+                var authNodes = zTreeObj.getNodesByFilter(function (node) {
+                    return (node.isbutton && node.checked === true);
+                });
+                var authIds = banana.helper.getLinq().From(authNodes).Select(function (item) {
+                    return item.id;
+                }).ToArray();
+
+                var nodes = zTreeObj.getCheckedNodes(true);
+                var menuIds = banana.helper.getLinq().From(nodes).Where(function (item) {
+                    return !item.isbutton;
+                }).Select(function (item) {
+                    return item.id;
+                }).ToArray();
+
+                banana.helper.ajax({
+                    url: '/sysrole/SaveRoleMenu'
+                    , data: {
+                        roleId: $("#roleId").val()
+                        , menuIds: menuIds
+                        , authIds: authIds
+                    }
+                    , success: function (res) {
+                        banana.helper.invokeFunction(callback, res);
+                    }
+                });
+            }
+        });
+    </script>
+}
+<div id="tree_menu" class="ztree"></div>
+<input type="hidden" value=@roleId id="roleId" />

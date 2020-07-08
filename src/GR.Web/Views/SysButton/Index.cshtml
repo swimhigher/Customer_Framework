@@ -1,0 +1,170 @@
+﻿@{
+    ViewBag.Title = "按钮权限";
+}
+@section styles{
+
+}
+@section scripts{
+    <script src="~/js/base/jquery.table.js"></script>
+
+    <script type="text/html" id="toolbarTemplate">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+    </script>
+    <script type="text/html" id="createOnTemplate">
+        {{ d.CreateOn.toDate().format('yyyy-MM-dd HH:mm') }}
+    </script>
+    <script type="text/html" id="updateOnTemplate">
+        {{ d.UpdateOn.toDate().format('yyyy-MM-dd HH:mm') }}
+    </script>
+    <script type="text/html" id="StateTemplate">
+        {{# if(d.State==0){ }}
+        正常
+        {{# }else if(d.State==-1){ }}
+        删除
+        {{#  } }}
+
+    </script>
+    <script type="text/html" id="IconTemplate">
+        <i class="layui-icon">{{ d.Icon }}</i>
+
+    </script>
+    <script>
+        $(document).keydown(function (e) {
+            if (e.keyCode == 13) {
+                $('*[banana-cmd="search"]').trigger('click');
+                e.preventDefault();
+            }
+        });
+        $(function () {
+
+            $('#table_container').table({
+                url: '/SysButton/getpage/'
+                , cols: [[
+
+                    { field: 'Name', title: '名称', width: 200 }
+                    , { field: 'MenuName', title: '父菜单' }
+                    , { field: 'Code', title: '编码', width: 200 }
+                    , { field: 'State', title: '状态 ', width: 150, align: 'center', templet: '#StateTemplate', }
+                    , { field: 'CreateOn', title: '创建时间', templet: '#createOnTemplate', }
+                    , { field: 'UpdateTime', title: '更新时间', templet: '#updateOnTemplate', }
+                    , { field: 'Remark', title: '备注' }
+                    , { fixed: 'right', title: '操作', align: 'left', toolbar: '#toolbarTemplate' }
+                ]]
+                , initSort: {
+                }
+                , where: {
+                }
+                , page: false
+                , done: function (res, curr, count) {
+
+                }
+                , complete: function (e) {
+                    var table = e.table;
+                    var events = {
+                        search: function () {
+                            e.target.reload({
+                                where: $('form:first').serializeObject()
+                            });
+                        },
+                        'create': function () {
+                            banana.controls.open({
+                                title: '按钮权限-创建',
+                                area: ['600px', '600px'],
+                                content: '/SysButton/edit'
+                                , btn: ['提交', '取消']
+                                , yes: function (index, target) {
+                                    banana.helper.invokeFunction($(arguments[1][0]).find('iframe')[0].contentWindow['submit'], function (res) {
+                                        if (res.success) {
+                                            banana.controls.close(index);
+                                            banana.controls.msg("保存成功");
+                                            e.refresh();
+                                        } else {
+                                            banana.controls.alert(res.message);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
+                    };
+                    banana.on(function (e) {
+                        banana.helper.invokeFunction(events[e.cmd]);
+                    });
+
+                }
+                , on: function (e) {
+                    switch (e.cmd) {
+
+                        case 'tool':
+                            var id = e.args.data.Id;
+                            switch (e.args.event) {
+                                case 'edit':
+                                    banana.controls.open({
+                                        title: '菜单-编辑',
+                                        area: ['600px', '600px'],
+                                        content: '/SysButton/edit?id=' + id
+                                        , btn: ['提交', '取消']
+                                        , yes: function (index, target) {
+                                            banana.helper.invokeFunction($(arguments[1][0]).find('iframe')[0].contentWindow['submit'], function (res) {
+                                                if (res.success) {
+                                                    banana.controls.close(index);
+                                                    e.refresh();
+                                                } else {
+                                                    banana.controls.alert(res.message);
+                                                }
+                                            });
+                                        }
+                                    });
+                                    break;
+                                case "delete":
+                                    banana.controls.confirm('确认删除吗？', function () {
+                                        banana.helper.ajax({
+                                            url: '/SysButton/delete'
+                                            , data: { id: id }
+                                            , success: function (res) {
+                                                if (res.success) {
+                                                    e.refresh();
+                                                } else {
+                                                    banana.controls.alert(res.message);
+                                                }
+                                            }
+                                        });
+                                    });
+                                    break;
+                            }
+                            break;
+                    }
+                }
+            });
+        });
+
+
+    </script>
+}
+
+<blockquote class="layui-elem-quote" style="height: 35px;">
+    <form class="layui-form" method="post" id="form_search">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">名称：</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input" name="Name" autocomplete="off" />
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">父菜单：</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input" name="MenuName" autocomplete="off" />
+                </div>
+            </div>
+            <div style="float:right;">
+                <div class="layui-btn-group">
+                    <button type="button" class="layui-btn" banana-cmd="search">搜索</button>
+                    <button type="button" class="layui-btn" banana-cmd="create">新建</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</blockquote>
+<div id="table_container"></div>

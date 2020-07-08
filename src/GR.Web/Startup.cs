@@ -1,19 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-
 using DataBase;
 using GR.Core;
+using GR.Core.Identity;
+using GR.Core.Ioc;
 using GR.IServices;
 using GR.Web.Filter;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
+
 //using static GR.IServices.ServicesExtent;
 namespace GR.Web
 {
@@ -30,15 +29,29 @@ namespace GR.Web
         public void ConfigureServices(IServiceCollection services)
         {
             AssemblyName name = new AssemblyName("GR.Services");
-            services.RegisterAssemblyTypes(null, ServiceLifetime.Singleton,Assembly.Load(name));
+            services.RegisterAssemblyTypes(null, ServiceLifetime.Singleton, Assembly.Load(name));
 
-            services.AddControllersWithViews(config=> {
+            //初始化数据库
+            ConfigDb.Init(ConfigHelper.GetString("Connstring"));
+            //用静态类存储上下文，得到身份
+            services.AddHttpContextAccessorEx();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+          .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, o =>
+          {
+              o.LoginPath = new PathString("/Login/Index");
+              o.AccessDeniedPath = new PathString("/Home/Denied");
+          });
+            //HttpContextCore.ServiceProvider = services.BuildServiceProvider();
+            services.AddControllersWithViews(config =>
+            {
                 config.Filters.Add(typeof(AjaxLogAttribute));
                 config.Filters.Add(typeof(SampleAsyncActionFilter));
+            }).AddJsonOptions(option =>
+            {
+                option.JsonSerializerOptions.PropertyNamingPolicy = null;
             });
-            ConfigDb.Init(ConfigHelper.GetString("Connstring"));
-            //var a = ConfigHelper.Get<string>("AllowedHosts");
-            //var b = ConfigHelper.Get<string>("conn:str");
+            EngineContext.initialize(new GeneralEngine(services.BuildServiceProvider()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,9 +69,11 @@ namespace GR.Web
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseStaticHttpContext();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -1,0 +1,181 @@
+﻿@model GR.Entity.SysMenu;
+@using GR.Entity;
+@{
+    bool isEdit = Model != null;
+    ViewBag.Title = isEdit ? "编辑" : "新建";
+    ViewBag.IsForm = true; //表示该页面为表单页，需要从模版加载jquery.form.js/jquery.validate.js等类库
+    var menuList = new List<SysMenu>();// BLLFactory<SysMenuBLL>.Instance.GetAllParentList();
+}
+@section styles{
+    <style>
+        .layui-col-xs7 {
+            float: none;
+        }
+    </style>
+}
+@section scripts{
+    <script type="text/javascript">
+
+        $('select[name="MenuType"]').val('@(isEdit ? Model.MenuType : 0)');
+        $('select[name="State"]').val('@(isEdit ? Model.State : 1)');
+
+        $('select[name="OpenType"]').val('@(isEdit ? Model.OpenType : 0)');
+
+        $(function () {
+
+                var $form = $('form');
+                layui.use('form', function () {
+                    var form = layui.form;
+                });
+
+            $form.validate({
+                errorElement: 'div'
+                , errorClass: 'valid-block'
+                , focusInvalid: true
+                , rules: {
+                    'Name': {
+                        required: true
+                    
+                        , minlength: 2
+                        , maxlength: 30
+                    }
+                  
+                    , 'state': { required: true }
+                    , 'OpenType': { required: true }
+                    , 'Url': { required: true }
+                    , 'MenuType': { required: true }
+                    , 'OrderBy': { required: true, number: true }
+                    , 'Icon': { required: true }
+                }
+                , messages: {
+                }
+                , highlight: function (e) { $(e).closest('.valid-block').addClass('has-error'); }
+                , success: function (e) { $(e).remove(); }
+                , errorPlacement: function (error, element) { error.insertAfter(element); }
+            });
+
+            window.submit = function (callback) {
+                if ($form.valid()) {
+                    $form.ajaxSubmit(function (res) {
+                        banana.helper.invokeFunction(callback, res);
+                    });
+                }
+            };
+        });
+    </script>
+}
+<form class="layui-form layui-form-pane" action="/SysMenu/save" method="post" style="margin-top: 20px;padding-left: 25px;">
+    <input type="hidden" id="Id" name="Id" value="@(isEdit?Model.Id:"")" />
+    <input type="hidden" id="ParentId" name="ParentId" value="@(isEdit?Model.ParentId:ViewBag.ParentId)" />
+    <div class="layui-row">
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label required"> 名称：</label>
+                <div class="layui-inline">
+                    <input type="text"
+                           name="Name"
+                           placeholder="请输入"
+                           autocomplete="off"
+                           class="layui-input layui-form-danger layui-col-xs7 layui-col-sm7 layui-col-md7"
+                           value="@(isEdit?Model.Name:"")" />
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">状态：</label>
+                <div class="layui-inline" style="width:183px;">
+                    <select name="State">
+                        <option value="1" selected="selected">启用</option>
+                        <option value="0">禁用</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">菜单类型：</label>
+                <div class="layui-inline" style="width:183px;">
+                    <select name="MenuType">
+                        @*<option value="0" @if (!isEdit || (isEdit && Model.MenuType= =1)) { @Html.Raw("selected") ; } selected="selected">目录</option>
+                            <option value="1" @if (isEdit && Model.MenuType= =0) { @Html.Raw("selected") ; }>页面</option>*@
+                        <option value="0" selected="selected">目录</option>
+                        <option value="1">页面</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">打开类型：</label>
+                <div class="layui-inline" style="width:183px;">
+                    <select name="OpenType">
+                        <option value="0" selected="selected">页面弹窗</option>
+                        <option value="1">新窗口</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label required"> 地址：</label>
+                <div class="layui-inline">
+                    <input type="text"
+                           name="Url"
+                           placeholder="请输入"
+                           autocomplete="off"
+                           class="layui-input layui-form-danger layui-col-xs7 layui-col-sm7 layui-col-md7"
+                           value="@(isEdit?Model.Url:"")" />
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label required"> 图标：</label>
+                <div class="layui-inline">
+                    <input type="text"
+                           name="Icon"
+                           placeholder="请输入"
+                           autocomplete="off"
+                           class="layui-input layui-form-danger layui-col-xs7 layui-col-sm7 layui-col-md7"
+                           value="@(isEdit?Model.Icon:"")" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-row">
+
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label required"> 序号：</label>
+                <div class="layui-inline">
+                    <input type="text"
+                           name="OrderBy"
+                           placeholder="请输入"
+                           autocomplete="off"
+                           class="layui-input layui-form-danger layui-col-xs7 layui-col-sm7 layui-col-md7"
+                           value="@(isEdit?Model.OrderBy.ToString():"")" />
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label"> 备注：</label>
+                <div class="layui-inline">
+                    <input type="text"
+                           name="Remark"
+                           placeholder="请输入"
+                           autocomplete="off"
+                           class="layui-input layui-form-danger layui-col-xs7 layui-col-sm7 layui-col-md7"
+                           value="@(isEdit?Model.Remark:"")" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

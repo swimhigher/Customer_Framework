@@ -1,13 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace GR.IServices
 {
-   public static class ServicesExtent
+    public static class ServicesExtent
     {
         /// <summary>
         /// RegisterAssemblyTypes
@@ -31,13 +29,12 @@ namespace GR.IServices
             {
                 types = types.Where(typesFilter);
             }
-           // Console.WriteLine(assemblies[0].GetTypes().Count());
+            // Console.WriteLine(assemblies[0].GetTypes().Count());
 
             foreach (var item in assemblies[0].GetTypes().Where(p => p.IsClass && p.GetInterfaces().Contains(typeof(IService))))
             {
                 services.Add(new ServiceDescriptor(item.GetInterfaces().Where(p => p.Name != "IService").FirstOrDefault(), item, serviceLifetime));
             }
-
 
             return services;
         }

@@ -1,0 +1,166 @@
+﻿@{
+    Layout = null;
+    string username = ViewBag.UserName ?? "";
+    string password = ViewBag.Password ?? "";
+}
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="/lib/html5shiv.js"></script>
+    <script type="text/javascript" src="/lib/respond.min.js"></script>
+    <![endif]-->
+    <link href="~/css/login.css" rel="stylesheet" />
+
+    <link href="/font/iconfont.css" rel="stylesheet" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>登录 - 标题</title>
+    <meta name="keywords" content="标题" />
+    <meta name="description" content="标题" />
+</head>
+<body>
+
+    <div class='democenter' id="v_app_login">
+        <div class='login-box'>
+            <div class='loginbox-center'>
+                <div class='sh-name'>标题</div>
+                <form id="loginform">
+                    <div class="input_box">
+                        <span><i class="iconfont icon-zhanghaoicon" style="font-size:18px"></i></span>
+                        <input type="text"
+                               class="uid valid"
+                               placeholder="请输入用户名"
+                               v-on:blur="onblur"
+                               v-on:focus="onfocus"
+                               v-on:keyup.13="signin"
+                               v-model="username" :disabled="disabled" />
+                    </div>
+                    <div class="input_box">
+                        <span><i class="iconfont icon-mima" style="font-size:18px"></i></span>
+                        <input type="password"
+                               class="uid valid"
+                               placeholder="请输入密码"
+                               v-on:blur="onblur"
+                               v-on:focus="onfocus"
+                               v-on:keyup.13="signin"
+                               v-model="password" :disabled="disabled" />
+                    </div>
+                    @*<div class="remember">
+                            <input type="checkbox" checked v-if="remember" v-model="remember" :disabled="disabled" />
+                            <input type="checkbox" v-else v-model="remember" :disabled="disabled" />
+                            <span>记住账户</span>
+                        </div>*@
+                    <button type="button" class="login_btn"
+                            v-html="buttonText"
+                            v-on:click="signin"
+                            :disabled="disabled">
+                        登&nbsp;录
+                    </button>
+                    <span class="error-message" style="color:red;">{{message}}</span>
+                </form>
+            </div>
+        </div>
+        <div class="demofooter">&copy;&nbsp;2018&nbsp;浙江广锐信息科技有限公司</div>
+    </div>
+
+    <script src="/js/jquery.1.9.0.js"></script>
+    <script>
+        $(function () {
+            var explorer = navigator.userAgent;
+            if (explorer.indexOf("MSIE") >= 0) {
+                if ((explorer.indexOf("MSIE 8.0") > 0)) {
+
+                    window.location.href = "/Login/loginfail"
+
+                }
+            }
+        })
+    </script>
+    <script src="/js/base/banana.js"></script>
+    <script src="/js/vue.min.js"></script>
+    <script type="text/javascript">
+        var context = {
+            username: '@username'
+            , password:'@password'
+        };
+    </script>
+
+    <script>
+        $(function () {
+            if (window.location.href.toLowerCase() != window.top.location.href.toLowerCase()) {
+                banana.helper.go('/login/index', window.top);
+                return;
+            }
+
+            var vm = new Vue({
+                el: '#v_app_login'
+                , data: {
+                    username: context.username
+                    , password: context.password
+                    , remember: true
+                    , disabled: false
+                    , buttonText: '登&nbsp;&nbsp;录'
+                    , message: ''
+                }
+                , methods: {
+                    signin: function () {
+                        var data = {
+                            username: this.username
+                            , password: this.password
+                            , remember: true//this.remember
+                        };
+                        $.ajax({
+                            url: '/login/check'
+                            , type: 'post'
+                            , data: data
+                            , beforeSend: function () {
+                                vm.toggle();
+                            }
+                            , success: function (res) {
+                                debugger
+                                //debugger;
+                                if (res.Success) {
+                                    location.href = '/home/index';
+                                    //banana.helper.go('/main/index');
+                                    return;
+                                }
+                                vm.toggle();
+                                vm.message = res.Message;
+                            }
+                        });
+                    },
+                    CheckItem: function () {
+
+                        this.remember = !this.remember;
+                        console.log(this.remember)
+                    }
+                    , toggle: function () {
+                        if (this.disabled === true) {
+                            this.disabled = false;
+                            this.buttonText = '登&nbsp;&nbsp;录';
+                        } else {
+                            this.disabled = true;
+                            this.buttonText = '请稍后...';
+                        }
+                    }
+                    , onblur: function (e) {
+                        $(e.target).parent().removeClass('blue');
+                    }
+                    , onfocus: function (e) {
+                        $(e.target).parent().addClass('blue');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

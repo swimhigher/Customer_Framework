@@ -1,0 +1,315 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GR.Entity</name>
+    </assembly>
+    <members>
+        <member name="P:GR.Entity.Dto.BaseSearchObject.page">
+            <summary>
+            当前页码
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Dto.BaseSearchObject.limit">
+            <summary>
+            每页条数
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Dto.BaseSearchObject.sort">
+            <summary>
+            排序字段
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Dto.BaseSearchObject.order">
+            <summary>
+            排序方式：desc、asc
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Dto.BaseSearchObject.keyword">
+            <summary>
+            搜索字段（且当只有一个搜索框时，可直接使用此类）
+            使用子类继承此类时可忽略
+            </summary>
+        </member>
+        <member name="M:GR.Entity.Dto.Result`1.ToObject">
+            <summary>
+            将键转小写
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:GR.Entity.DbDataStstus">
+            <summary>
+            数据库数据状态
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Dto_SysUsers.SysUsersSearchModel.CreateonS">
+            <summary>
+            创建时间-开始
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Dto_SysUsers.SysUsersSearchModel.CreateonE">
+            <summary>
+            创建时间-结束
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Dto_SysUsers.SysUsersSearchModel.UpdateonS">
+            <summary>
+            创建时间-开始
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Dto_SysUsers.SysUsersSearchModel.UpdateonE">
+            <summary>
+            创建时间-结束
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Dto_SysUsers.SysUsersSearchModel.state">
+            <summary>
+            状态(0正常-1删除1禁用)
+            </summary>
+        </member>
+        <member name="T:GR.Entity.Auditlog">
+            <summary>
+            审计日志
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.Action">
+            <summary>
+            方法
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.BrowserInfo">
+            <summary>
+            浏览器信息
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.ClientIpAddress">
+            <summary>
+            客户端ip
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.ClientName">
+            <summary>
+            客户端名称
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.ClientVirtualIpAddress">
+            <summary>
+            虚拟地址（内网）
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.Controller">
+            <summary>
+            控制器
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.Exception">
+            <summary>
+            异常信息
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.ExceptionMessage">
+            <summary>
+            异常描述
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.ExecutionDuration">
+            <summary>
+            执行时长
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.ExecutionTime">
+            <summary>
+            调用时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.MethodType">
+            <summary>
+            请求类型
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.Parameters">
+            <summary>
+            参数
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.Result">
+            <summary>
+            返回数据
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.Route">
+            <summary>
+            url
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.UserId">
+            <summary>
+            用户
+            </summary>
+        </member>
+        <member name="P:GR.Entity.Auditlog.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="T:GR.Entity.SysButton">
+            <summary>
+            按钮权限
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysButton.CreateOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysButton.UpdateOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="T:GR.Entity.SysDeptment">
+            <summary>
+            机构
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysDeptment.Id">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysDeptment.CreateBy">
+            <summary>
+            创建人
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysDeptment.CreateOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysDeptment.UpdateOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysDeptment.Floor">
+            <summary>
+            层级
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysDeptment.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysDeptment.Parent">
+            <summary>
+            父级id
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysDeptment.Remark">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysDeptment.State">
+            <summary>
+            状态(0正常-1删除1禁用)
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysDeptment.UpdateBy">
+            <summary>
+            更新人
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysDict.CreateOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysDict.UpdateOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysMenu.CreateOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysMenu.UpdateOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysMenu.Children">
+            <summary>
+            子菜单
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysMenu.Parent">
+            <summary>
+            上级菜单
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysRole.CreateOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysRole.UpdateOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="T:GR.Entity.SysRoleButton">
+            <summary>
+            角色按钮权限关联表
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysRoleButton.CreateOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysRoleButton.UpdateOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysRoleMenu.CreateOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysRoleMenu.UpdateOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysRoleUser.CreateOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysRoleUser.UpdateOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+        <member name="T:GR.Entity.SysUser">
+            <summary>
+            用户
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysUser.CreateOn">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:GR.Entity.SysUser.UpdateOn">
+            <summary>
+            更新时间
+            </summary>
+        </member>
+    </members>
+</doc>

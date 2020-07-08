@@ -1,0 +1,313 @@
+﻿@{
+    ViewBag.Title = "用户列表";
+
+}
+
+@section styles{
+    <link href="/lib/select/css/select2.css" rel="stylesheet" />
+    <style>
+        .layui-form-item {
+            margin-bottom: 0px;
+        }
+    </style>
+}
+@section scripts{
+    <script type="text/html" id="toolbarTemplate">
+
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="roleset">角色设置</a>
+
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="pwdreset">重置密码</a>
+
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+    </script>
+    <script type="text/html" id="createOnTemplate">
+        {{ d.CreateOn.toDate().format('yyyy-MM-dd HH:mm') }}
+    </script>
+    <script type="text/html" id="updateOnTemplate">
+        {{ d.UpdateOn.toDate().format('yyyy-MM-dd HH:mm') }}
+    </script>
+    <script type="text/html" id="stateTemplate">
+        {{# if(d.State == -1) { }}
+        <span class="layui-badge">已删除</span>
+        {{# }else { }}
+        <input type="checkbox" value="{{d.Id}}" lay-skin="switch" lay-text="正常|禁用" lay-filter="state_filter" {{ d.State==0 ? 'checked' : '' }}>
+        {{# } }}
+    </script>
+    <script type="text/html" id="departmentTemplate">
+        {{# if(d.SysUserDepartmentList!=null && d.SysUserDepartmentList.length>0){ }}
+        {{ d.SysUserDepartmentList[0].SysDepartment.Name }}
+        {{# } }}
+    </script>
+
+    <script src="/lib/select/js/select2.full.js"></script>
+    <script src="~/js/base/jquery.table.js"></script>
+    <script src="/js/base/common.js"></script>
+
+    <script>
+        $(function () {
+            $('#form_search').find('input').keydown(function (e) {
+                if (e.keyCode == 13) {
+                    $('*[banana-cmd="search"]').trigger('click');
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+}
+
+<blockquote class="layui-elem-quote">
+    <form class="layui-form" id="form_search">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width:167px;">姓名：</label>
+                <div class="layui-input-inline">
+                    <input class="layui-input" name="keyword" id="keyword" autocomplete="off" />
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">状态：</label>
+                <div class="layui-input-inline">
+                    <select name="state">
+                        <option value="-1">全部</option>
+                        <option value="0">正常</option>
+                        <option value="1">禁用</option>
+                    </select>
+                </div>
+            </div>
+            @*<div class="layui-inline">
+                    <label class="layui-form-label">部门：</label>
+                    <div class="layui-input-inline">
+                        <select name="deptment">
+                            <option value="">所有</option>
+                            @{
+                                foreach (var item in departmentList)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+
+                            }
+                        </select>
+                    </div>
+                </div>*@
+            <div style="float:right;">
+                <div class="layui-btn-group">
+                    <button type="button" class="layui-btn" banana-cmd="search" style="margin-left:15px">搜索</button>
+                    @if (Html.HasPermission("User_Add"))
+                    {
+
+                        <button type="button" class="layui-btn" banana-cmd="create">新建</button>
+
+                    }
+
+                    <button type="button" class="layui-btn layui-btn-danger" banana-cmd="delete">删除</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</blockquote>
+
+<div id="table_container"></div>
+
+<script>
+
+    $(function () {
+
+        //下拉框
+        //$('#combobox_department').combobox({
+        //    module: 'department' //模块
+
+        //    , onSelect: function (e) { //选中某项时的回调
+        //        console.log(e.data);
+
+        //        e.set(e.data.id);
+        //    }
+        //});
+
+        //表格
+        $('#table_container').table({
+            url: '/sysuser/getpage/'
+            , cols: [[
+                { type: 'checkbox', fixed: 'left' }
+                , { field: 'Name', title: '姓名', sort: true }
+                , { field: 'LoginName', title: '登录名', sort: true }
+                , { field: 'DeptmentName', title: '所属部门' }
+                , { field: 'State', title: '状态', align: 'center', width: 100, templet: '#stateTemplate' }
+                , { field: 'CreateOn', title: '创建时间', sort: true, width: 150, templet: '#createOnTemplate' }
+                , { field: 'UpdateOn', title: '更新时间', sort: true, width: 150, templet: '#updateOnTemplate' }
+
+                , { fixed: 'right', title: '操作', width: 280, align: 'left', toolbar: '#toolbarTemplate' }
+            ]]
+            , initSort: {
+                field: 'CreateOn' //排序字段，对应 cols 设定的各字段名
+                , type: 'desc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+                , state: -1
+            }
+            , where: { //配合initSort使用
+                sort: 'CreateOn'
+                , order: 'desc'
+                , state: -1
+            }
+            , complete: function (e) {
+                var table = e.table;
+                var events = {
+                    'search': function () {
+                        e.refresh({
+                            page: { curr: 1 }
+                        });
+                    }
+                    , 'create': function () {
+                        banana.controls.open({
+                            title: '新建',
+                            area: ['700px', '450px'],
+                            content: '/sysuser/edit'
+                            , btn: ['提交', '取消']
+                            , yes: function (index, target) {
+                                banana.helper.invokeFunction($(arguments[1][0]).find('iframe')[0].contentWindow['submit'], function (res) {
+                                    if (res.Success) {
+                                        banana.controls.close(index);
+                                        events.search(); //手动调用搜索，重新加载表格
+                                    } else {
+                                        banana.controls.alert(res.Message);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    , 'delete': function () {
+                        var ids = e.getIds();
+                        if (ids.length == 0) {
+                            banana.controls.msg('请先选择数据项');
+                            return;
+                        }
+                        banana.controls.confirm('确认删除这' + ids.length + '项记录吗？', function () {
+                            banana.helper.ajax({
+                                url: '/sysuser/delete'
+                                , data: { ids: ids }
+                                , success: function (res) {
+                                    if (res.Success) {
+                                        banana.controls.msg('操作成功');
+                                        e.refresh();
+                                    } else {
+                                        banana.controls.alert(res.Message);
+                                    }
+                                }
+                            });
+                        });
+                    }
+                };
+                banana.on(function (e) {
+                    banana.helper.invokeFunction(events[e.cmd]);
+                });
+
+                //监听状态操作
+                e.form.on('switch(state_filter)', function (obj) {
+                    //layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
+                    banana.helper.ajax({
+                        url: '/sysuser/ToggleState'
+                        , data: {
+                            id: this.value
+                            , disable: !obj.elem.checked
+                        }
+                        , success: function (res) {
+
+                            if (res.Success && res.data) {
+                                banana.controls.tips('操作成功', obj.othis);
+                            } else {
+                                banana.controls.tips(res.Message, obj.othis);
+                                e.target.reload(e.target.config);
+                            }
+                        }
+                    });
+                });
+            }
+            , on: function (e) {
+                switch (e.cmd) {
+                    case 'sort':
+                        e.refresh({ initSort: e.args });
+                        break;
+                    case 'tool':
+                        var id = e.args.data.Id;
+                        switch (e.args.event) {
+                            case 'delete':
+                                banana.controls.confirm('确认删除吗？', function () {
+                                    banana.helper.ajax({
+                                        url: '/sysuser/delete'
+                                        , data: { ids: [id] }
+                                        , success: function (res) {
+                                            if (res.Success) {
+                                                banana.controls.msg('操作成功');
+                                                e.refresh();
+                                            } else {
+                                                banana.controls.alert(res.Message);
+                                            }
+                                        }
+                                    });
+                                });
+                                break;
+                            case 'edit':
+                                banana.controls.open({
+                                    title: '编辑'
+                                    , area: ['700px', '450px']
+                                    , content: '/sysuser/edit?id=' + id
+                                    , btn: ['提交', '取消']
+                                    , yes: function (index, target) {
+                                        banana.helper.invokeFunction($(target).find('iframe')[0].contentWindow['submit'], function (res) {
+                                            if (res.Success) {
+                                                banana.controls.msg('操作成功');
+                                                banana.controls.close(index);
+                                                e.refresh();
+                                            } else {
+                                                banana.controls.alert(res.Message);
+                                            }
+                                        });
+                                    }
+                                });
+                                break;
+                            case 'roleset':
+                                banana.controls.open({
+                                    title: '角色设置',
+                                    area: ['500px', '600px'],
+                                    content: '/sysuser/setuserrole?id=' + e.args.data.Id
+                                    , btn: ['提交', '取消']
+                                    , yes: function (index, target) {
+                                        banana.helper.invokeFunction($(arguments[1][0]).find('iframe')[0].contentWindow['submit'], function (res) {
+                                            if (res.Success) {
+                                                banana.controls.msg('操作成功');
+                                                banana.controls.close(index);
+                                                //e.refresh();
+                                            } else {
+                                                banana.controls.alert(res.Message);
+                                            }
+                                        });
+                                    }
+                                });
+                                break;
+                            case 'pwdreset':
+
+                                banana.controls.open({
+                                    title: '修改密码',
+                                    area: ['500px', '400px'],
+                                    content: '/sysuser/SetPassword?id=' + e.args.data.Id
+                                    , btn: ['提交', '取消']
+                                    , yes: function (index, target) {
+                                        banana.helper.invokeFunction($(arguments[1][0]).find('iframe')[0].contentWindow['submit'], function (res) {
+                                            if (res.Success) {
+                                                banana.controls.msg('修改成功');
+                                                banana.controls.close(index);
+                                                //e.refresh();
+                                            } else {
+                                                banana.controls.alert(res.Message);
+                                            }
+                                        });
+                                    }
+                                });
+                                break;
+                        }
+                        break;
+                }
+            }
+        });
+    });
+</script>

@@ -1,7 +1,4 @@
 ﻿using log4net.Layout.Pattern;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GR.Core.Log4net
 {
@@ -24,7 +21,6 @@ namespace GR.Core.Log4net
             log.Logger.Log(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType,
                 InterfaceLevel, message, null);
         }
-      
 
         //public static void PersonFormat(this log4net.ILog log, string message, params object[] args)
         //{
@@ -41,6 +37,7 @@ namespace GR.Core.Log4net
     public class ProcessPatternConvert : PatternLayoutConverter
     {
         private readonly static string processName = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
+
         protected override void Convert(System.IO.TextWriter writer, log4net.Core.LoggingEvent loggingEvent)
         {
             writer.Write(processName);//输出当前进程名

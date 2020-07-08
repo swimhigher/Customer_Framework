@@ -12,123 +12,117 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using FreeSql.DataAnnotations;
 
-namespace GR.entity
-{
+namespace GR.Entity {
 
-    /// <summary>
-    /// 审计日志
-    /// </summary>
-    [JsonObject(MemberSerialization.OptIn), Table(Name = "auditlog")]
-    public partial class Auditlog
-    {
-        public Auditlog()
-        {
-            ExecutionTime = DateTime.Now;
-        }
+	/// <summary>
+	/// 审计日志
+	/// </summary>
+	[JsonObject(MemberSerialization.OptIn), Table(Name = "auditlog")]
+	public partial class Auditlog {
 
-        [JsonProperty, Column(IsPrimary = true, IsIdentity = true)]
-        public int Id { get; set; }
+		[JsonProperty, Column(IsPrimary = true, IsIdentity = true)]
+		public int Id { get; set; }
 
-        /// <summary>
-        /// 方法
-        /// </summary>
-        [JsonProperty, Column(DbType = "varchar(50)")]
-        public string Action { get; set; }
+		/// <summary>
+		/// 方法
+		/// </summary>
+		[JsonProperty, Column(DbType = "varchar(50)")]
+		public string Action { get; set; }
 
-        /// <summary>
-        /// 浏览器信息
-        /// </summary>
-        [JsonProperty]
-        public string BrowserInfo { get; set; }
+		/// <summary>
+		/// 浏览器信息
+		/// </summary>
+		[JsonProperty]
+		public string BrowserInfo { get; set; }
 
-        /// <summary>
-        /// 客户端ip
-        /// </summary>
-        [JsonProperty, Column(DbType = "varchar(50)")]
-        public string ClientIpAddress { get; set; }
+		/// <summary>
+		/// 客户端ip
+		/// </summary>
+		[JsonProperty, Column(DbType = "varchar(50)")]
+		public string ClientIpAddress { get; set; }
 
-        /// <summary>
-        /// 客户端名称
-        /// </summary>
-        [JsonProperty]
-        public string ClientName { get; set; }
+		/// <summary>
+		/// 客户端名称
+		/// </summary>
+		[JsonProperty]
+		public string ClientName { get; set; }
 
-        /// <summary>
-        /// 虚拟地址（内网）
-        /// </summary>
-        [JsonProperty, Column(DbType = "varchar(50)")]
-        public string ClientVirtualIpAddress { get; set; }
+		/// <summary>
+		/// 虚拟地址（内网）
+		/// </summary>
+		[JsonProperty, Column(DbType = "varchar(50)")]
+		public string ClientVirtualIpAddress { get; set; }
 
-        /// <summary>
-        /// 控制器
-        /// </summary>
-        [JsonProperty, Column(DbType = "varchar(50)")]
-        public string Controller { get; set; }
+		/// <summary>
+		/// 控制器
+		/// </summary>
+		[JsonProperty, Column(DbType = "varchar(50)")]
+		public string Controller { get; set; }
 
-        /// <summary>
-        /// 异常信息
-        /// </summary>
-        [JsonProperty, Column(DbType = "text")]
-        public string Exception { get; set; }
+		/// <summary>
+		/// 异常信息
+		/// </summary>
+		[JsonProperty, Column(DbType = "text")]
+		public string Exception { get; set; }
 
-        /// <summary>
-        /// 异常描述
-        /// </summary>
-        [JsonProperty, Column(DbType = "varchar(500)")]
-        public string ExceptionMessage { get; set; }
+		/// <summary>
+		/// 异常描述
+		/// </summary>
+		[JsonProperty, Column(DbType = "varchar(500)")]
+		public string ExceptionMessage { get; set; }
 
-        /// <summary>
-        /// 执行时长
-        /// </summary>
-        [JsonProperty, Column(DbType = "double(255,0)")]
-        public double? ExecutionDuration { get; set; }
+		/// <summary>
+		/// 执行时长
+		/// </summary>
+		[JsonProperty, Column(DbType = "double(255,0)")]
+		public double? ExecutionDuration { get; set; }
 
-        /// <summary>
-        /// 调用时间
-        /// </summary>
-        [JsonProperty, Column(DbType = "datetime")]
-        public DateTime? ExecutionTime { get; set; }
+		/// <summary>
+		/// 调用时间
+		/// </summary>
+		[JsonProperty, Column(DbType = "datetime")]
+		public DateTime? ExecutionTime { get; set; }
 
-        /// <summary>
-        /// 请求类型
-        /// </summary>
-        [JsonProperty, Column(DbType = "varchar(20)")]
-        public string MethodType { get; set; }
+		/// <summary>
+		/// 请求类型
+		/// </summary>
+		[JsonProperty, Column(DbType = "varchar(20)")]
+		public string MethodType { get; set; }
 
-        /// <summary>
-        /// 参数
-        /// </summary>
-        [JsonProperty, Column(DbType = "varchar(2000)")]
-        public string Parameters { get; set; }
+		/// <summary>
+		/// 参数
+		/// </summary>
+		[JsonProperty, Column(DbType = "varchar(2000)")]
+		public string Parameters { get; set; }
 
-        /// <summary>
-        /// 返回数据
-        /// </summary>
-        [JsonProperty, Column(DbType = "text")]
-        public string Result { get; set; }
+		/// <summary>
+		/// 返回数据
+		/// </summary>
+		[JsonProperty, Column(DbType = "text")]
+		public string Result { get; set; }
 
-        /// <summary>
-        /// url
-        /// </summary>
-        [JsonProperty]
-        public string Route { get; set; }
+		/// <summary>
+		/// url
+		/// </summary>
+		[JsonProperty]
+		public string Route { get; set; }
 
-        /// <summary>
-        /// 用户
-        /// </summary>
-        [JsonProperty, Column(DbType = "varchar(50)")]
-        public string UserId { get; set; }
+		/// <summary>
+		/// 用户
+		/// </summary>
+		[JsonProperty, Column(DbType = "varchar(50)")]
+		public string UserId { get; set; }
 
-        /// <summary>
-        /// 用户名
-        /// </summary>
-        [JsonProperty, Column(DbType = "varchar(50)")]
-        public string UserName { get; set; }
+		/// <summary>
+		/// 用户名
+		/// </summary>
+		[JsonProperty, Column(DbType = "varchar(50)")]
+		public string UserName { get; set; }
 
 
-        #region 外键 => 导航属性，ManyToMany
+		#region 外键 => 导航属性，ManyToMany
 
-        #endregion
-    }
+		#endregion
+	}
 
 }

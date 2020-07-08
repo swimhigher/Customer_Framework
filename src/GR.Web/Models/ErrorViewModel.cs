@@ -1,5 +1,3 @@
-using System;
-
 namespace GR.Web.Models
 {
     public class ErrorViewModel

@@ -1,0 +1,68 @@
+﻿/* form 表单验证相关 start */
+
+/* 错误信息样式 */
+.valid-block {
+    color: #f00;
+    margin-top: 5px;
+    font-size: 12px;
+}
+/* *号的样式 */
+.required::before {
+    display: inline;
+    content: "*";
+    font-family: FontAwesome;
+    font-size: 18px;
+    font-weight: 800;
+    position: absolute;
+    top: 0px;
+    right: 4px;
+    color: rgb(255,59,48);
+    -webkit-transform-origin-x: 0;
+    -webkit-transform: scale(0.7);
+}
+
+.required:before {
+    display: inline;
+    content: "*";
+    font-family: FontAwesome;
+    font-size: 18px;
+    font-weight: 800;
+    position: absolute;
+    top: 0px;
+    right: 4px;
+    color: rgb(255,59,48);
+    -webkit-transform-origin-x: 0;
+    -webkit-transform: scale(0.7);
+}
+
+.must::before {
+    display: inline;
+    content: "*";
+    font-family: FontAwesome;
+    font-size: 18px;
+    font-weight: 800;
+    position: absolute;
+    top: 0px;
+    right: 4px;
+    color: rgb(255,59,48);
+    -webkit-transform-origin-x: 0;
+    -webkit-transform: scale(0.7);
+}
+
+.must:before {
+    display: inline;
+    content: "*";
+    font-family: FontAwesome;
+    font-size: 18px;
+    font-weight: 800;
+    position: absolute;
+    top: 0px;
+    right: 4px;
+    color: rgb(255,59,48);
+    -webkit-transform-origin-x: 0;
+    -webkit-transform: scale(0.7);
+}
+/*layui自带的导出不要*/
+[lay-event=LAYTABLE_EXPORT] {
+    display: none;
+}

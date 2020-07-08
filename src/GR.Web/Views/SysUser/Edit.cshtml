@@ -1,0 +1,183 @@
+﻿@model GR.Entity.SysUser
+@{
+    bool isEdit = Model != null;
+    ViewBag.Title = isEdit ? "编辑" : "新建";
+    ViewBag.IsForm = true; //表示该页面为表单页，需要从模版加载jquery.form.js/jquery.validate.js等类库
+                           //var departmentList = ViewBag.departmentList;
+}
+@section styles{
+    <link href="/lib/select/css/select2.css" rel="stylesheet" />
+    <style>
+        .layui-col-xs7 {
+            float: none;
+        }
+
+        #combobox_department-error {
+            position: absolute;
+            top: 36px;
+        }
+
+        .select2-container {
+            width: 182px !important;
+        }
+    </style>
+}
+@section scripts{
+    <script src="/lib/select/js/select2.full.js"></script>
+    <script src="/js/base/common.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var $form = $('form');
+            layui.use('form', function () {
+                var form = layui.form;
+            });
+
+            $form.validate({
+                errorElement: 'div'
+                , errorClass: 'valid-block'
+                , focusInvalid: true
+                , rules: {
+                    'userName': {
+                        required: true
+                        , minlength: 2
+                        , maxlength: 30
+                    }
+                    , 'name': {
+                        required: true
+                        , minlength: 2
+                        , maxlength: 30
+                    }
+
+                    , 'password': {
+                        required: true
+                        , minlength: 6
+                        , maxlength: 30
+
+                    }
+                    , 'password_repeat': {
+                        required: true
+                        , minlength: 6
+                        , maxlength: 30
+                        , equalTo: '[name="password"]'
+
+                    }
+
+                }
+                , messages: {
+                    'minlength': $.validator.format('密码最小长度为 {0}')
+                    , 'maxlength': $.validator.format('密码最大长度为 {0}')
+                    , 'password_repeat': {
+                        equalTo: '两次密码输入不一致'
+                    }
+                }
+                , ignore: ""
+                , highlight: function (e) { $(e).closest('.valid-block').addClass('has-error'); }
+                , success: function (e) { $(e).remove(); }
+                , errorPlacement: function (error, element) { error.insertAfter(element); }
+            });
+
+            window.submit = function (callback) {
+                if ($form.valid()) {
+                    $form.ajaxSubmit(function (res) {
+                        banana.helper.invokeFunction(callback, res);
+                    });
+                }
+            };
+
+            //$('#combobox_department').combobox({
+            //    module: 'department' //模块
+            //    //, default: { id: '1c36c53a10624f56a08c0464949373ad', text:'水果小小2'}//'请选择'
+            //    , onSelect: function (e) { //选中某项时的回调
+            //        e.set(e.data.id);
+            //    }
+            //});
+
+        });
+    </script>
+}
+<form class="layui-form" action="/sysuser/save" method="post" style="margin-top: 20px;">
+    <input type="hidden" name="id" value="@(isEdit?Model.Id:"")" />
+    <div class="layui-row">
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">账户名</label>
+                <div class="layui-inline">
+                    <input type="text"
+                           name="LoginName"
+                           autocomplete="off"
+                           class="layui-input layui-form-danger layui-col-xs7 layui-col-sm7 layui-col-md7"
+                           value="@(isEdit?Model.LoginName:"")" />
+                </div>
+            </div>
+        </div>
+        @*<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                <div class="layui-form-item" style="position:relative">
+                    <label class="layui-form-label required">所属部门</label>
+                    <div class="layui-inline" style="width:182px">
+                        <select name="DeptmentId"
+                                class="layui-col-xs7 layui-col-sm7 layui-col-md7"
+                                id="combobox_department"
+                                lay-search>
+                            <option value=""></option>
+                            @foreach (var item in departmentList)
+                            {
+                                if (isEdit && Model.DeptmentId != null && Model.DeptmentId == item.Id)
+                                {
+                                    <option selected value="@item.Id">@item.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>*@
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <div class="layui-form-item">
+                <label class="layui-form-label required">姓名</label>
+                <div class="layui-inline">
+                    <input type="text"
+                           name="name"
+                           placeholder="请输入"
+                           autocomplete="off"
+                           class="layui-input layui-form-danger layui-col-xs7 layui-col-sm7 layui-col-md7"
+                           value="@(isEdit?Model.Name:"")" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (isEdit)
+    {
+        <input type="hidden" name="password" value="@(isEdit?Model.Password:"")" />
+        <input type="hidden" name="password_repeat" value="@(isEdit?Model.Password:"")" />
+    }
+    else
+    {
+        <div class="layui-row">
+            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">密码</label>
+                    <div class="layui-inline">
+                        <input type="password" name="password" placeholder="请输入"
+                               class="layui-input layui-form-danger layui-col-xs7 layui-col-sm7 layui-col-md7" />
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">重复密码</label>
+                    <div class="layui-inline">
+                        <input type="password" name="password_repeat" placeholder="请输入"
+                               class="layui-input layui-form-danger layui-col-xs7 layui-col-sm7 layui-col-md7" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</form>

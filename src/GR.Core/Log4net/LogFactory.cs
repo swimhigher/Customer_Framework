@@ -1,12 +1,9 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using log4net;
+﻿using log4net;
 using log4net.Config;
 using log4net.Repository;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace GR.Core.Log4net
 {
@@ -33,12 +30,10 @@ namespace GR.Core.Log4net
             if (LogManager.GetAllRepositories().Where(p => p.Name == "Log4net_Repository").Count() == 0)
             {
                 Repository = LogManager.CreateRepository("Log4net_Repository");
-              
             }
             else
             {
                 Repository = LogManager.GetRepository("Log4net_Repository");
-
             }
             XmlConfigurator.Configure(Repository, configFile);
         }
@@ -56,12 +51,13 @@ namespace GR.Core.Log4net
         public static LogFactory GetLogger(Type type)
         {
             return new LogFactory(LogManager.GetLogger(Repository.Name, type));
-
         }
+
         public static LogFactory GetLogger(string name)
         {
             return new LogFactory(log4net.LogManager.GetLogger(Repository.Name, name));
         }
+
         public LogFactory Fatal(Exception exception, object message = null)
         {
             if (logInstance.IsFatalEnabled)
@@ -69,6 +65,7 @@ namespace GR.Core.Log4net
 
             return this;
         }
+
         /// <summary>
         /// 一般错误
         /// </summary>
@@ -79,6 +76,7 @@ namespace GR.Core.Log4net
 
             return this;
         }
+
         /// <summary>
         /// 一般错误
         /// </summary>
@@ -89,6 +87,7 @@ namespace GR.Core.Log4net
 
             return this;
         }
+
         /// <summary>
         /// 警告
         /// </summary>
@@ -102,13 +101,13 @@ namespace GR.Core.Log4net
                 }
                 else
                 {
-
                     logInstance.Warn(message, exception);
                 }
             }
 
             return this;
         }
+
         /// <summary>
         /// 一般信息
         /// </summary>
@@ -119,6 +118,7 @@ namespace GR.Core.Log4net
 
             return this;
         }
+
         /// <summary>
         /// 调试信息
         /// </summary>
@@ -129,16 +129,16 @@ namespace GR.Core.Log4net
 
             return this;
         }
+
         public LogFactory InterfaceInfo(string message, Exception exception = null)
         {
-
             logInstance.InterfaceInfo(message);
 
             return this;
         }
+
         //public LogFactory SangTang(string message, Exception exception = null)
         //{
-
         //    logInstance.SangTang(message, exception);
 
         //    return this;

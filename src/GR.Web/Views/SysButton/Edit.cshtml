@@ -1,0 +1,136 @@
+﻿@{
+
+    ViewBag.IsForm = true;
+    bool isEdit = Model != null;
+}
+@model GR.Entity.SysButton
+@section styles{
+
+}
+@section scripts{
+    <script type="text/javascript">
+
+
+        $('select[name="MenuId"]').val('@(isEdit ? Model.MenuId : "")');
+        $('select[name="State"]').val( @(isEdit ? Model.State : 0));
+
+
+
+        $(function () {
+
+            layui.use('form', function () {
+                var form = layui.form;
+            });
+            var $form = $('form');
+            $form.validate({
+                errorElement: 'div'
+                , errorClass: 'valid-block'
+                , focusInvalid: true
+                , rules: {
+                    'Name': {
+                        required: true,
+                    },
+                    "Code": {
+                        required: true
+                    },
+                    "MenuId": {
+                        required: true
+                    }
+
+                }
+                , ignore: ":hidden:not(select)"
+                , success: function (e) { $(e).remove(); }
+                , errorPlacement: function (error, element) { error.insertAfter(element); }
+                , highlight: function (e) { $(e).closest('.valid-block').addClass('has-error'); }
+            });
+            window.submit = function (callback) {
+                if ($form.valid()) {
+                    $form.ajaxSubmit(function (res) {
+                        banana.helper.invokeFunction(callback, res);
+                    });
+                }
+
+            };
+            $('.Wdate').on('click', function () {
+                WdatePicker({
+                    el: this
+                    , isShowOK: false
+                    , qsEnabled: false
+                    , isShowClear: false
+                });
+            });
+
+
+        });
+    </script>
+}
+
+
+
+<div id="productedit">
+    <form class="layui-form" action="/SysButton/save" method="post" style="margin-top: 40px;">
+
+        <input type="hidden" name="Id" value="@(isEdit?Model.Id:" ")" />
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">隶属菜单</label>
+            <div class="layui-inline" style="width:300px">
+                <select name="MenuId">
+                    <option value="">空</option>
+                    @foreach (var item in ViewBag.Menulist)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+
+                    }
+                </select>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">名称</label>
+            <div class="layui-inline" style="width:300px">
+                <input type="text"
+                       name="Name"
+                       autocomplete="off"
+                       class="layui-input layui-form-danger" id="Name" value="@(isEdit?Model.Name:" ")" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">编码</label>
+            <div class="layui-inline" style="width:300px">
+                <input type="text"
+                       name="Code"
+                       autocomplete="off"
+                       class="layui-input layui-form-danger" id="Code" value="@(isEdit?Model.Code:" ")" />
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">提示</label>
+            <div class="layui-inline" style="width:300px">
+                <input type="text"
+                       name="Remark"
+                       autocomplete="off"
+                       class="layui-input layui-form-danger" id="Remark" value="@(isEdit?Model.Remark:" ")" />
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-inline" style="width:300px">
+                <select name="State">
+                    <option value="0">正常</option>
+                    <option value="1">删除</option>
+                </select>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+
+
+
+
